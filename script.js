@@ -1,5 +1,4 @@
 const noteForm=document.querySelector('#note-form');
-const noteInput=document.querySelector('#note-input');
 const noteList=document.querySelector('#notes-list');
 
 const quickNotes=[
@@ -18,3 +17,23 @@ function render() {
     });
 }
 render();
+
+noteForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const noteInput=document.querySelector('#note-input').value.trim();
+    const noteCategory=document.querySelector('#note-category').value;
+    if(!noteInput || !noteCategory || noteInput.length>200) {
+        alert('Please enter a valid note, category, and ensure the note is less than 200 characters.');
+    }
+    else{
+        const newNote={
+            id:quickNotes.length+1,
+            text:noteInput,
+            category:noteCategory,
+            createdAt:new Date()
+        };
+        quickNotes.push(newNote);
+        render();
+        noteInput.value='';
+    }
+})
