@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1 Quicknotes</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <a href="index.html">Quicknotes</a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome to Project 1 Quicknotes</h1>
+        <p>Capture your thoughts and keep them organized by category.</p>
+
+        <section aria-labelledby="create-note-heading">
+            <h2 id="create-note-heading">Create a note</h2>
+            <form id="note-form">
+                <label for="note-input">Note</label>
+                <input type="text" id="note-input" name="note" required>
+                <label for="note-category">Category</label>
+                <select id="note-category" name="category">
+                    <option value="personal">Personal</option>
+                    <option value="work">Work</option>
+                    <option value="other">Other</option>
+                </select>
+                <button type="submit">Add note</button>
+            </form>
+        </section>
+
+        <section aria-labelledby="notes-heading">
+            <h2 id="notes-heading">Your notes</h2>
+            <label for="search-input">Search notes</label>
+            <input type="search" id="search-input" name="search">
+            <ul id="notes-list"></ul>
+            <p id="note-count">0 notes</p>
+            <p id="error-message" role="alert" aria-live="polite"></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Quicknotes. All rights reserved.</p>
+    </footer>
+</body>
+</html>
