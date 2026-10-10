@@ -3,6 +3,8 @@ const noteList=document.querySelector('#notes-list');
 const noteInput=document.querySelector('#note-input');
 const noteCategory=document.querySelector('#note-category');
 const errorMessage=document.querySelector('#error-message');
+const noteCount=document.querySelector('#note-count');
+const searchInput=document.querySelector('#search-input');
 
 const quickNotes=[
     {id:1, text:'Buy groceries',category:'Personal',createdAt:new Date()},
@@ -52,10 +54,12 @@ function render() {
             quickNotes.splice(quickNotes.indexOf(note), 1);
             saveNotes();
             render();
+            updateNoteCount();
         });
         noteItem.appendChild(delBtn);
         noteList.appendChild(noteItem);
     });
+    updateNoteCount();
 }
 
 noteForm.addEventListener('submit', (e) => {
@@ -75,9 +79,29 @@ noteForm.addEventListener('submit', (e) => {
         quickNotes.push(newNote);
         saveNotes();
         render();
+        updateNoteCount();g
         noteForm.reset();
     }
 })
 
 loadNotes();
 render();
+
+
+searchInput.addEventListener('input', () => {
+    const searchedWord = searchInput.value.toLowerCase();
+    const filteredNotes = quickNotes.filter(note => note.category.toLowerCase().includes(searchedWord) || note.text.toLowerCase().includes(searchedWord));
+    noteList.replaceChildren();
+    filteredNotes.forEach(note => {
+        const noteItem = document.createElement('li');
+        noteItem.textContent = `${note.text} [${note.category}] - ${note.createdAt.toLocaleString()}`;
+        noteList.appendChild(noteItem);
+    });
+});
+
+function updateNoteCount(){
+    const noteLength = quickNotes.length;
+    noteCount.textContent = `${noteLength} quicknotes`;  
+}
+
+    
