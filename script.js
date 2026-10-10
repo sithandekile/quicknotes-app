@@ -5,6 +5,7 @@ const noteCategory=document.querySelector('#note-category');
 const errorMessage=document.querySelector('#error-message');
 const noteCount=document.querySelector('#note-count');
 const searchInput=document.querySelector('#search-input');
+const searchMessage=document.querySelector('#search-message');
 
 const quickNotes=[
     {id:1, text:'Buy groceries',category:'Personal',createdAt:new Date()},
@@ -44,19 +45,49 @@ function loadNotes() {
 
 function render() {
     noteList.replaceChildren();
-    quickNotes.forEach(note => {
-        const noteItem=document.createElement('li');
-        noteItem.textContent=`${note.text} [${note.category}] - ${note.createdAt.toLocaleString()}`;
-        const delBtn=document.createElement('button');
-        delBtn.textContent='Delete';
+
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const visibleNotes = quickNotes.filter(note =>
+        note.text.toLowerCase().includes(searchTerm) ||
+        note.category.toLowerCase().includes(searchTerm)
+    );
+
+    searchMessage.textContent = searchTerm && visibleNotes.length === 0
+        ? 'No notes match your search.'
+        : '';
+
+    visibleNotes.forEach(note => {
+        const noteItem = document.createElement('li');
+        const noteContent = document.createElement('div');
+        noteContent.classList.add('note-content');
+
+        const noteText = document.createElement('span');
+        noteText.classList.add('note-text');
+        noteText.textContent = note.text;
+
+        const noteNoteCategory = document.createElement('span');
+        const categoryName = note.category.toLowerCase();
+        noteNoteCategory.classList.add('note-category', `category-${categoryName}`);
+        noteNoteCategory.textContent = note.category;
+
+        const noteDate = document.createElement('span');
+        noteDate.classList.add('note-date');
+        noteDate.textContent = note.createdAt.toLocaleString();
+
+        noteContent.append(noteText, noteNoteCategory, noteDate);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.textContent = 'Delete';
         delBtn.classList.add('delete-btn');
+        delBtn.setAttribute('aria-label', `Delete note: ${note.text}`);
         delBtn.addEventListener('click', () => {
             quickNotes.splice(quickNotes.indexOf(note), 1);
             saveNotes();
             render();
-            updateNoteCount();
         });
-        noteItem.appendChild(delBtn);
+
+        noteItem.append(noteContent, delBtn);
         noteList.appendChild(noteItem);
     });
     updateNoteCount();
@@ -66,42 +97,38 @@ noteForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const text=noteInput.value.trim();
     const category=noteCategory.value;
-    if(!text || !category || text.length>200) {
-        errorMessage.textContent='Enter a note of 1-200 characters and choose a category.';
-    }
-    else{
-        const newNote={
-            id:quickNotes.length + 1,
+    if(!text) {
+        errorMessage.textContent='Please enter a note.';
+    } else if(text.length > 200) {
+        errorMessage.textContent='Your note must be 200 characters or fewer.';
+    } else if(!category) {
+        errorMessage.textContent='Please choose a category.';
+    } else {
+        const newNote = {
+            id: quickNotes.reduce((largestId, note) => Math.max(largestId, note.id), 0) + 1,
             text,
             category,
-            createdAt:new Date()
+            createdAt: new Date()
         };
         quickNotes.push(newNote);
         saveNotes();
         render();
-        updateNoteCount();g
         noteForm.reset();
     }
-})
+});
 
 loadNotes();
 render();
 
+searchInput.addEventListener('input', render);
 
-searchInput.addEventListener('input', () => {
-    const searchedWord = searchInput.value.toLowerCase();
-    const filteredNotes = quickNotes.filter(note => note.category.toLowerCase().includes(searchedWord) || note.text.toLowerCase().includes(searchedWord));
-    noteList.replaceChildren();
-    filteredNotes.forEach(note => {
-        const noteItem = document.createElement('li');
-        noteItem.textContent = `${note.text} [${note.category}] - ${note.createdAt.toLocaleString()}`;
-        noteList.appendChild(noteItem);
-    });
-});
-
-function updateNoteCount(){
-    const noteLength = quickNotes.length;
-    noteCount.textContent = `${noteLength} quicknotes`;  
+function updateNoteCount() {
+    const totalNotes = quickNotes.length;
+    noteCount.textContent = totalNotes === 0
+        ? 'No notes'
+        : totalNotes === 1
+            ? '1 note'
+            : `${totalNotes} notes`;
 }
 
     

@@ -10,13 +10,6 @@
 <body>
     <header>
         <a href="index.html">Quicknotes</a>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
     </header>
     <main>
         <h1>Welcome to Project 1 Quicknotes</h1>
@@ -33,16 +26,17 @@
                     <option value="work">Work</option>
                     <option value="other">Other</option>
                 </select>
-                <button type="submit">Add note</button>
+                <button type="submit" class="add-btn">Add note</button>
             </form>
         </section>
 
         <section aria-labelledby="notes-heading">
             <h2 id="notes-heading">Your notes</h2>
-            <label for="search-input">Search notes</label>
-            <input type="search" id="search-input" name="search">
-            <ul id="notes-list"></ul>
-            <p id="note-count">0 notes</p>
+            <label for="search-input" >Search notes</label>
+            <input type="search" id="search-input" class="search-input" name="search">
+            <ul id="notes-list" class="notes-list"></ul>
+            <p id="search-message" aria-live="polite"></p>
+            <p id="note-count" class="note-count">0 notes</p>
             <p id="error-message" role="alert" aria-live="polite"></p>
         </section>
     </main>
